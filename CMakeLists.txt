@@ -41,8 +41,9 @@ target_link_libraries(planets PRIVATE
 )
 
 # Copy shaders to build directory
-add_custom_command(TARGET planets POST_BUILD
+add_custom_target(copy_shaders ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/shaders
     $<TARGET_FILE_DIR:planets>/shaders
+    COMMENT "Copying shaders to build directory"
 )
