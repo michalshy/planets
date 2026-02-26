@@ -11,6 +11,7 @@ class Shader {
 
   public:
     Shader(std::string_view vertex_path, std::string_view fragment_path);
+    ~Shader();
 
     void use();
     void set_bool(std::string_view name, bool value) const;
