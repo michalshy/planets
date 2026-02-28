@@ -21,6 +21,10 @@ class Camera {
   public:
     Camera();
 
+    glm::vec3 get_position() {
+        return position;
+    }
+
     glm::mat4 get_view_mat();
     void process_keyboard(CAM_MOVEMENT dir, float dt);
     void process_mouse(float x_offset, float y_offset, GLboolean constraint_pitch = true);
