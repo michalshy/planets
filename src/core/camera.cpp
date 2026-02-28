@@ -48,10 +48,10 @@ void Camera::process_scroll(float y_offset) {
 void Camera::update_camera_vecs() {
     // calculate the new Front vector
     glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front   = glm::normalize(front);
+    front.x     = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y     = sin(glm::radians(pitch));
+    front.z     = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    this->front = glm::normalize(front);
     // also re-calculate the Right and Up vector
     right = glm::normalize(glm::cross(
         front, world_up)); // normalize the vectors, because their length gets closer to 0 the

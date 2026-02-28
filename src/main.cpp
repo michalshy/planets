@@ -34,7 +34,13 @@ int main() {
         std::println("Window creation failed!");
         return 1;
     }
+
     glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::println("GL loading failed!");
         return 1;
@@ -105,7 +111,6 @@ int main() {
         projection           = glm::perspective(
             glm::radians(45.0f), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
             0.1f, 100.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         base_sh.set_mat4("projection", projection);
         base_sh.set_mat4("view", view);
 
@@ -156,7 +161,13 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+// Had to rewrite a little bit due to non-working wsl input capture from mouse...
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS) {
+        first_mouse = true;
+        return;
+    }
+
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -167,7 +178,7 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     }
 
     float xoffset = xpos - last_x;
-    float yoffset = last_y - ypos; // reversed since y-coordinates go from bottom to top
+    float yoffset = last_y - ypos;
 
     last_x = xpos;
     last_y = ypos;
