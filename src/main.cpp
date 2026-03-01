@@ -1,5 +1,8 @@
+#include "core/common.h"
+#include "core/mesh.h"
 #include "core/window.h"
 #include "core/renderer.h"
+#include "core/geometry.h"
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -26,6 +29,11 @@ int main() {
     light.pos   = light_pos;
     light.scale = {0.2f, 0.2f, 0.2f};
 
+    Mesh cube_msh(cube_vertices, cube_indices);
+
+    auto [sphere_vertices, sphere_indices] = generate_sphere(1.0f, 40, 40);
+    Mesh sphere_msh(sphere_vertices, sphere_indices);
+
     renderer.add_light(light_pos);
 
     while (!window.should_close()) {
@@ -35,8 +43,8 @@ int main() {
 
         renderer.begin_frame(window.get_camera());
 
-        renderer.draw_lit(Shape::Cube, cube, {1.0f, 0.5f, 0.31f});
-        renderer.draw_unlit(Shape::Cube, light, {1.0f, 0.5f, 0.31f});
+        renderer.draw_lit(cube_msh, cube, {1.0f, 0.5f, 0.31f});
+        renderer.draw_unlit(sphere_msh, light, {1.0f, 0.5f, 0.31f});
         window.end_frame();
     }
 }

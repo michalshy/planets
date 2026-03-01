@@ -8,6 +8,6 @@ class Mesh {
 
   public:
     Mesh(std::vector<float> vertices, std::vector<unsigned int> indices);
-    void draw();
+    void draw() const;
     ~Mesh();
 };

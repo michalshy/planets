@@ -26,7 +26,7 @@ Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices) {
     glEnableVertexAttribArray(1);
 }
 
-void Mesh::draw() {
+void Mesh::draw() const {
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

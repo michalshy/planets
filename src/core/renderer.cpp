@@ -15,9 +15,6 @@ Renderer::~Renderer() {
 
 bool Renderer::init() {
     glEnable(GL_DEPTH_TEST);
-
-    cube_mesh = std::make_unique<Mesh>(cube_vertices, cube_indices);
-
     return true;
 }
 
@@ -39,29 +36,22 @@ void Renderer::begin_frame(Camera* camera) {
     unlit_shader->set_mat4("view", view);
 }
 
-void Renderer::draw_lit(Shape shape, Transform transform, glm::vec3 color) {
+void Renderer::draw_lit(const Mesh& mesh, Transform transform, glm::vec3 color) {
     lit_shader->use();
     lit_shader->set_vec3("objectColor", color);
 
     lit_shader->set_mat4("model", transform.to_mat4());
 
-    if (shape == Shape::Cube)
-        cube_mesh->draw();
-    // if (shape == Shape::Sphere)
-    //     sphere_mesh.draw();
+    mesh.draw();
 }
 
-void Renderer::draw_unlit(Shape shape, Transform transform, glm::vec3 color) {
+void Renderer::draw_unlit(const Mesh& mesh, Transform transform, glm::vec3 color) {
     unlit_shader->use();
-    // unlit_shader->set_vec3("objectColor", color);
 
     glm::mat4 model = glm::mat4(1.0f);
     unlit_shader->set_mat4("model", transform.to_mat4());
 
-    if (shape == Shape::Cube)
-        cube_mesh->draw();
-    // if (shape == Shape::Sphere)
-    //     sphere_mesh.draw();
+    mesh.draw();
 }
 
 void Renderer::add_light(glm::vec3 pos) {
