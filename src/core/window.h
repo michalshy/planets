@@ -21,6 +21,10 @@ class Window {
     void time_check();
     bool should_close();
 
+    float get_delta() {
+        return delta_time;
+    }
+
     Camera* get_camera() {
         return camera.get();
     }
