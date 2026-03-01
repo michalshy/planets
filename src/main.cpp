@@ -1,5 +1,6 @@
 #include "core/common.h"
 #include "core/mesh.h"
+#include "core/system.h"
 #include "core/window.h"
 #include "core/renderer.h"
 #include "core/geometry.h"
@@ -24,6 +25,8 @@ int main() {
         return 1;
     }
 
+    System solar;
+
     Transform cube;
     Transform light;
     light.pos   = light_pos;
@@ -36,6 +39,8 @@ int main() {
 
     renderer.add_light(light_pos);
 
+    solar.init();
+
     while (!window.should_close()) {
         window.time_check();
         window.process_input();
@@ -43,7 +48,9 @@ int main() {
 
         renderer.begin_frame(window.get_camera());
 
-        renderer.draw_lit(cube_msh, cube, {1.0f, 0.5f, 0.31f});
+        solar.simulate();
+
+        renderer.draw_lit(sphere_msh, cube, {1.0f, 0.5f, 0.31f});
         renderer.draw_unlit(sphere_msh, light, {1.0f, 0.5f, 0.31f});
         window.end_frame();
     }
