@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "core/mesh.h"
 #include "shader.h"
 #include <memory>
 #include "camera.h"
@@ -24,8 +25,6 @@ struct Transform {
 };
 
 class Renderer {
-    unsigned int lit_vao, unlit_vao, vertex_buffer;
-
   public:
     Renderer();
     ~Renderer();
@@ -41,4 +40,6 @@ class Renderer {
   private:
     std::unique_ptr<Shader> lit_shader;
     std::unique_ptr<Shader> unlit_shader;
+
+    std::unique_ptr<Mesh> cube_mesh;
 };

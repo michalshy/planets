@@ -1,34 +1,8 @@
 #include "renderer.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <print>
+#include <memory>
 #include "common.h"
-
-// spheres
-constexpr float vertices[] = {
-    -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.5f,  -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f,
-    0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, 0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f,
-    -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f,
-
-    -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,
-
-    -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  -0.5f, 0.5f,  -0.5f, -1.0f, 0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f,  -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f,
-    -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,
-
-    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 1.0f,  0.0f,  0.0f,
-    0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,
-    0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-    -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.5f,  -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,
-    0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,
-
-    -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f};
 
 Renderer::Renderer()
     : lit_shader(std::make_unique<Shader>("shaders/base.vert", "shaders/base.frag")),
@@ -36,36 +10,13 @@ Renderer::Renderer()
 }
 
 Renderer::~Renderer() {
-    glDeleteVertexArrays(1, &lit_vao);
-    glDeleteVertexArrays(1, &unlit_vao);
-    glDeleteBuffers(1, &vertex_buffer);
+    // nothing
 }
 
 bool Renderer::init() {
     glEnable(GL_DEPTH_TEST);
 
-    // objs
-    glGenVertexArrays(1, &lit_vao);
-    glGenBuffers(1, &vertex_buffer);
-
-    glBindVertexArray(lit_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(0));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                          reinterpret_cast<void*>(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // lights
-    glGenVertexArrays(1, &unlit_vao);
-    glBindVertexArray(unlit_vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                          (reinterpret_cast<void*>(0)));
-    glEnableVertexAttribArray(0);
+    cube_mesh = std::make_unique<Mesh>(cube_vertices, cube_indices);
 
     return true;
 }
@@ -94,8 +45,10 @@ void Renderer::draw_lit(Shape shape, Transform transform, glm::vec3 color) {
 
     lit_shader->set_mat4("model", transform.to_mat4());
 
-    glBindVertexArray(lit_vao);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    if (shape == Shape::Cube)
+        cube_mesh->draw();
+    // if (shape == Shape::Sphere)
+    //     sphere_mesh.draw();
 }
 
 void Renderer::draw_unlit(Shape shape, Transform transform, glm::vec3 color) {
@@ -105,8 +58,10 @@ void Renderer::draw_unlit(Shape shape, Transform transform, glm::vec3 color) {
     glm::mat4 model = glm::mat4(1.0f);
     unlit_shader->set_mat4("model", transform.to_mat4());
 
-    glBindVertexArray(unlit_vao);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    if (shape == Shape::Cube)
+        cube_mesh->draw();
+    // if (shape == Shape::Sphere)
+    //     sphere_mesh.draw();
 }
 
 void Renderer::add_light(glm::vec3 pos) {

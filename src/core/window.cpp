@@ -105,7 +105,6 @@ void Window::process_mouse(GLFWwindow* window, double xposIn, double yposIn) {
 
     last_x = xpos;
     last_y = ypos;
-    glfwSetCursorPos(window, SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0);
 
     camera->process_mouse(xoffset, yoffset);
 }
