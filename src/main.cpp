@@ -1,8 +1,6 @@
-#include "core/common.h"
-#include "core/mesh.h"
-#include "core/system.h"
+#include "simulation/system.h"
 #include "core/window.h"
-#include "core/renderer.h"
+#include "renderer/renderer.h"
 #include "core/geometry.h"
 #include <GLFW/glfw3.h>
 
@@ -10,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-constexpr glm::vec3 light_pos{1.2f, 1.0f, 2.0f};
+constexpr glm::vec3 light_pos{1.2f, 12.0f, 2.0f};
 
 int main() {
 

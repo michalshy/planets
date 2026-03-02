@@ -1,12 +1,12 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "core/mesh.h"
+#include "mesh.h"
 #include "shader.h"
 #include <memory>
-#include "camera.h"
+#include "core/camera.h"
 #include <glm/gtc/quaternion.hpp>
-#include "transform.h"
+#include "core/transform.h"
 
 class Renderer {
   public:

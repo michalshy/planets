@@ -2,8 +2,11 @@
 #include <cstdint>
 #include <vector>
 
-constexpr uint16_t SCR_WIDTH  = 800;
-constexpr uint16_t SCR_HEIGHT = 600;
+constexpr uint16_t SCR_WIDTH  = 1280;
+constexpr uint16_t SCR_HEIGHT = 720;
+
+// constexpr double G = 6.67430e-11;
+constexpr float G = 1.0f;
 
 static const std::vector<float> cube_vertices = {
     // back face (normal 0, 0, -1)

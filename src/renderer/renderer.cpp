@@ -2,11 +2,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <memory>
-#include "common.h"
+#include "core/common.h"
 
 Renderer::Renderer()
-    : lit_shader(std::make_unique<Shader>("shaders/base.vert", "shaders/base.frag")),
-      unlit_shader(std::make_unique<Shader>("shaders/light.vert", "shaders/light.frag")) {
+    : lit_shader(std::make_unique<Shader>("shaders/lit.vert", "shaders/lit.frag")),
+      unlit_shader(std::make_unique<Shader>("shaders/unlit.vert", "shaders/unlit.frag")) {
 }
 
 Renderer::~Renderer() {
@@ -27,7 +27,7 @@ void Renderer::begin_frame(Camera* camera) {
     glm::mat4 projection = glm::mat4(1.0f);
     projection           = glm::perspective(glm::radians(45.0f),
                                             static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
-                                            0.1f, 100.0f);
+                                            0.1f, 10000.0f);
     lit_shader->set_mat4("projection", projection);
     lit_shader->set_mat4("view", view);
 
@@ -65,6 +65,6 @@ void Renderer::end_frame() {
 }
 
 void Renderer::clear() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

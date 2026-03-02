@@ -1,8 +1,8 @@
 #pragma once
 
-#include "mesh.h"
+#include "renderer/mesh.h"
 #include <memory>
-#include "renderer.h"
+#include "renderer/renderer.h"
 
 class System {
     std::unique_ptr<Mesh> planet_mesh;
