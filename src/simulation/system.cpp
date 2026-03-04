@@ -5,6 +5,8 @@
 #include "glm/fwd.hpp"
 #include "glm/geometric.hpp"
 #include "core/common.h"
+#include <cmath>
+#include <cstdlib>
 #include <print>
 
 constexpr int STANDARD_STACKS = 20;
@@ -19,17 +21,22 @@ struct Celestial {
     Transform transform;
     Type type;
     glm::vec3 velocity{0.0f};
+    glm::vec3 momentum{0.0f};
     glm::vec3 acc{0.0f};
+    float gamma{1.0f};
     float mass;
+    float rest_mass;
     float radius;
     glm::vec3 color{0.3f, 0.3f, 0.0f};
     std::unique_ptr<Mesh> msh;
+    float proper_time{0.0f};
 
     Celestial(Transform _transform, Type _type, float _mass, float _radius, glm::vec3 _color)
         : transform(_transform), type(_type), mass(_mass), radius(_radius), color(_color) {
         auto [vertices, indices] =
             generate_sphere(_radius, STANDARD_STACKS, STANDARD_SLICES);
         msh = std::make_unique<Mesh>(vertices, indices);
+        rest_mass = mass;
     }
 
     void draw() {
@@ -40,17 +47,24 @@ struct Celestial {
         glm::vec3 dir = body.transform.pos - transform.pos;
         float distance = glm::length(dir);
         dir = glm::normalize(dir);
+        float v_avg = (glm::length(this->velocity) + glm::length(body.velocity)) / 2.0f;
+        float correction = 1.0f + (3.0f * v_avg * v_avg) / (c * c) + (2.0f * G * (mass + body.mass)) / (distance * c*c);
 
-        float magnitude = mass * body.mass * G / (distance * distance); 
+
+        float magnitude = rest_mass * body.rest_mass * G / (distance * distance) * correction; 
         glm::vec3 force = dir * magnitude;
 
-        acc += force / mass;
-        body.acc -= force / body.mass;
+        acc += force / rest_mass;
+        body.acc -= force / body.rest_mass;
     }
 
     void update(float dt) {
-        velocity += acc * dt;
+        momentum += acc * rest_mass * dt;
+        float p2 = glm::dot(momentum, momentum);
+        gamma = sqrt(1.0f + p2 / (rest_mass * rest_mass * c * c));
+        velocity = momentum / (gamma * rest_mass);
         transform.pos += velocity * dt;
+        proper_time += dt / gamma;
     }
 };
 
@@ -72,6 +86,7 @@ void System::init(Renderer* _renderer) {
     auto orbital_velocity = [&](Celestial& planet) {
         float r = glm::length(planet.transform.pos - sun.transform.pos);
         planet.velocity.z = sqrt(G * sun.mass / r);
+        planet.momentum = planet.velocity * planet.rest_mass;  // add this
     };
 
     orbital_velocity(mercury);
