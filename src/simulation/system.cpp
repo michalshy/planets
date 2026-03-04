@@ -5,6 +5,7 @@
 #include "glm/fwd.hpp"
 #include "glm/geometric.hpp"
 #include "core/common.h"
+#include "imgui.h"
 #include <cmath>
 #include <cstdlib>
 #include <print>
@@ -71,6 +72,8 @@ struct Celestial {
 static std::vector<Celestial> bodies;
 
 void System::init(Renderer* _renderer) {
+    bodies.clear();
+
     renderer = _renderer;
 
     Celestial sun = Celestial(Transform{glm::vec3(-200.0f, 0.0f, 0.0f)}, Type::Planet, 333000.0f, 30.0f, {1.0f, 1.0f, 0.0f});
@@ -111,6 +114,9 @@ void System::init(Renderer* _renderer) {
 }
 
 void System::simulate(float dt) {
+    ImGui::Begin("Window");
+    ImGui::End();
+
     for (auto& body : bodies) {
         body.acc = glm::vec3{0.0f};
     }

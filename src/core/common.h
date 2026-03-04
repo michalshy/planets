@@ -7,7 +7,7 @@ constexpr uint16_t SCR_HEIGHT = 720;
 
 // constexpr double G = 6.67430e-11;
 constexpr float G = 3.0f;
-constexpr float c = 1000.0f;
+static float c = 1000.0f;
 
 static const std::vector<float> cube_vertices = {
     // back face (normal 0, 0, -1)

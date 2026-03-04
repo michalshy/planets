@@ -17,6 +17,7 @@ class Window {
     Window();
     ~Window();
     bool init();
+    void begin_frame();
     void end_frame();
     void time_check();
     bool should_close();
