@@ -54,6 +54,10 @@ void Renderer::draw_unlit(const Mesh& mesh, Transform transform, glm::vec3 color
     mesh.draw();
 }
 
+void Renderer::draw_grid(const Mesh& mesh, Transform transform, glm::vec3 color) {
+    
+}
+
 void Renderer::add_light(glm::vec3 pos) {
     // currently just one
     lit_shader->use();

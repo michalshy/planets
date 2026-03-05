@@ -5,10 +5,16 @@
 #include "renderer/renderer.h"
 
 class System {
-    std::unique_ptr<Mesh> planet_mesh;
+    std::unique_ptr<Mesh> grid_mesh;
     Renderer* renderer;
 
   public:
     void init(Renderer* _renderer);
     void simulate(float dt);
+
+  private:
+    float time_multiplier{1.0f};
+
+    void render_sliders();
+    void render_planets();
 };
