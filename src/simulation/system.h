@@ -14,6 +14,7 @@ class System {
 
   private:
     float time_multiplier{1.0f};
+    float vis_scale{0.1f};
 
     void render_sliders();
     void render_planets();

@@ -18,7 +18,7 @@ bool Renderer::init() {
     return true;
 }
 
-void Renderer::begin_frame(Camera* camera) {
+void Renderer::begin_frame(Camera* camera, Window* window) {
     lit_shader->use();
     lit_shader->set_vec3("viewPos", camera->get_position());
     lit_shader->set_vec3("lightColor", 1.0f, 1.0f, 1.0f);
@@ -26,8 +26,8 @@ void Renderer::begin_frame(Camera* camera) {
     glm::mat4 view       = camera->get_view_mat();
     glm::mat4 projection = glm::mat4(1.0f);
     projection           = glm::perspective(glm::radians(45.0f),
-                                            static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
-                                            0.1f, 10000.0f);
+                                            window->aspect_ratio(),
+                                            0.1f, 100000.0f);
     lit_shader->set_mat4("projection", projection);
     lit_shader->set_mat4("view", view);
 

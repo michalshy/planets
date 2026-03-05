@@ -7,6 +7,7 @@
 #include "core/camera.h"
 #include <glm/gtc/quaternion.hpp>
 #include "core/transform.h"
+#include "core/window.h"
 
 class Renderer {
   public:
@@ -14,7 +15,7 @@ class Renderer {
     ~Renderer();
 
     bool init();
-    void begin_frame(Camera* camera);
+    void begin_frame(Camera* camera, Window* window);
     void draw_lit(const Mesh& mesh, Transform transform, glm::vec3 color);
     void draw_unlit(const Mesh& mesh, Transform transform, glm::vec3 color);
     void draw_grid(const Mesh& mesh, Transform transform, glm::vec3 color);

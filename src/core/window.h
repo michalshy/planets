@@ -2,10 +2,15 @@
 #include "camera.h"
 #include <memory>
 #include <GLFW/glfw3.h>
+#include "common.h"
+
+
 
 class Window {
     GLFWwindow* window;
     std::unique_ptr<Camera> camera;
+    int width = SCR_WIDTH;
+    int height = SCR_HEIGHT;
     // camera pos
     float last_x;
     float last_y;
@@ -29,6 +34,7 @@ class Window {
     Camera* get_camera() {
         return camera.get();
     }
+    float aspect_ratio() const { return static_cast<float>(width) / static_cast<float>(height); }
 
     // callbacks
     void process_resize(GLFWwindow* window, int width, int height);

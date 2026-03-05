@@ -1,7 +1,6 @@
 #include "window.h"
 #include <GLFW/glfw3.h>
 #include <print>
-#include "common.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -98,6 +97,8 @@ void Window::process_input() {
 }
 
 void Window::process_resize(GLFWwindow* window, int width, int height) {
+    this->width = width;
+    this->height = height;
     glViewport(0, 0, width, height);
 }
 

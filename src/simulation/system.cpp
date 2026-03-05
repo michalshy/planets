@@ -22,7 +22,6 @@ constexpr float VIS_SCALE_MIN = 0.0001f;
 
 constexpr glm::vec3 STARTING_GRID{0.0f, -250.0f, 0.0f};
 constexpr float SOFTENING = 50.0f;
-static float VIS_SCALE = 0.1f;
 
 enum class Type {
     Planet,
@@ -203,7 +202,7 @@ void System::simulate(float dt) {
             dip += body.mass / horizontal_dist;
         }
 
-        y = STARTING_GRID.y - dip * VIS_SCALE;
+        y = STARTING_GRID.y - dip * vis_scale;
     }
 
     grid_mesh->update_vertices(grid_vertices);
@@ -212,14 +211,14 @@ void System::simulate(float dt) {
 
 void System::render_sliders() {
     ImGui::SliderFloat("Time multiplicator", &time_multiplier, TIME_MULT_MIN, TIME_MULT_MAX);
-    ImGui::SliderFloat("Visual grid scale", &VIS_SCALE, VIS_SCALE_MIN, VIS_SCALE_MAX);
+    ImGui::SliderFloat("Visual grid scale", &vis_scale, VIS_SCALE_MIN, VIS_SCALE_MAX);
 }
 
 void System::render_planets() {
     for (auto& body : bodies) {
         ImGui::PushID(body.name.c_str());
         ImGui::CollapsingHeader(body.name.c_str());
-        if(ImGui::SliderFloat("mass", &body.mass, 0, 10000000))
+        if(ImGui::SliderFloat("mass", &body.mass, 0, 1000000))
         {
             body.rest_mass = body.mass;
         }

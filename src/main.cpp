@@ -40,7 +40,7 @@ int main() {
         renderer.clear();
 
         window.begin_frame();
-        renderer.begin_frame(window.get_camera());
+        renderer.begin_frame(window.get_camera(), &window);
 
         solar.simulate(window.get_delta());
 
