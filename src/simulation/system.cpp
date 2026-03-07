@@ -43,11 +43,12 @@ struct Celestial {
     std::unique_ptr<Mesh> msh;
     float proper_time{0.0f};
 
-    Celestial(std::string_view _name, Transform _transform, Type _type, float _mass, float _radius, glm::vec3 _color)
-        : name(_name), transform(_transform), type(_type), mass(_mass), radius(_radius), color(_color) {
-        auto [vertices, indices] =
-            generate_sphere(_radius, STANDARD_STACKS, STANDARD_SLICES);
-        msh = std::make_unique<Mesh>(vertices, indices, 6, false, DRAW_MODE::TRIANGLES);
+    Celestial(std::string_view _name, Transform _transform, Type _type, float _mass, float _radius,
+              glm::vec3 _color)
+        : name(_name), transform(_transform), type(_type), mass(_mass), radius(_radius),
+          color(_color) {
+        auto [vertices, indices] = generate_sphere(_radius, STANDARD_STACKS, STANDARD_SLICES);
+        msh       = std::make_unique<Mesh>(vertices, indices, 6, false, DRAW_MODE::TRIANGLES);
         rest_mass = mass;
     }
 
@@ -56,14 +57,14 @@ struct Celestial {
     }
 
     void calculate_forces(Celestial& body) {
-        glm::vec3 dir = body.transform.pos - transform.pos;
-        float distance = glm::length(dir);
-        dir = glm::normalize(dir);
-        float v_avg = (glm::length(this->velocity) + glm::length(body.velocity)) / 2.0f;
-        float correction = 1.0f + (3.0f * v_avg * v_avg) / (c * c) + (2.0f * G * (mass + body.mass)) / (distance * c*c);
+        glm::vec3 dir    = body.transform.pos - transform.pos;
+        float distance   = glm::length(dir);
+        dir              = glm::normalize(dir);
+        float v_avg      = (glm::length(this->velocity) + glm::length(body.velocity)) / 2.0f;
+        float correction = 1.0f + (3.0f * v_avg * v_avg) / (c * c) +
+                           (2.0f * G * (mass + body.mass)) / (distance * c * c);
 
-
-        float magnitude = rest_mass * body.rest_mass * G / (distance * distance) * correction; 
+        float magnitude = rest_mass * body.rest_mass * G / (distance * distance) * correction;
         glm::vec3 force = dir * magnitude;
 
         acc += force / rest_mass;
@@ -73,7 +74,7 @@ struct Celestial {
     void update(float dt) {
         momentum += acc * rest_mass * dt;
         float p2 = glm::dot(momentum, momentum);
-        gamma = sqrt(1.0f + p2 / (rest_mass * rest_mass * c * c));
+        gamma    = sqrt(1.0f + p2 / (rest_mass * rest_mass * c * c));
         velocity = momentum / (gamma * rest_mass);
         transform.pos += velocity * dt;
         proper_time += dt / gamma;
@@ -88,20 +89,29 @@ void System::init(Renderer* _renderer) {
     bodies.clear();
     renderer = _renderer;
 
-    Celestial sun = Celestial("sun", Transform{glm::vec3(-200.0f, 0.0f, 0.0f)}, Type::Planet, 333000.0f, 30.0f, {1.0f, 1.0f, 0.0f});
-    Celestial mercury = Celestial("mercury", Transform{glm::vec3(-142.1f, 0.0f, 0.0f)}, Type::Planet, 0.0553f, 8.0f, {0.55f, 0.50f, 0.48f});
-    Celestial venus = Celestial("venus", Transform{glm::vec3(-91.8f, 0.0f, 0.0f)}, Type::Planet, 0.815f, 12.0f, {1.0f, 0.5f, 0.0f});
-    Celestial earth = Celestial("earth", Transform{glm::vec3(-50.4f, 0.0f, 0.0f)}, Type::Planet, 1.0f, 12.0f, {0.0f, 0.75f, 0.0f});
-    Celestial mars = Celestial("mars", Transform{glm::vec3(27.9f, 0.0f, 0.0f)}, Type::Planet, 0.107f, 8.0f, {1.0f, 0.0f, 0.0f});
-    Celestial jupiter = Celestial("jupiter", Transform{glm::vec3(578.5f, 0.0f, 0.0f)}, Type::Planet, 317.8f, 200.0f, {0.76f, 0.60f, 0.42f});
-    Celestial saturn = Celestial("saturn", Transform{glm::vec3(1226.7f, 0.0f, 0.0f)}, Type::Planet, 95.2f, 180.0f, {0.87f, 0.78f, 0.57f});
-    Celestial uran = Celestial("uran", Transform{glm::vec3(2671.0f, 0.0f, 0.0f)}, Type::Planet, 14.5f, 100.0f, {0.56f, 0.84f, 0.86f});
-    Celestial neptun = Celestial("neptun", Transform{glm::vec3(4298.3f, 0.0f, 0.0f)}, Type::Planet, 17.1f, 100.0f, {0.25f, 0.41f, 0.88f});
+    Celestial sun =
+        Celestial("sun", Transform{SUN_POSITION}, Type::Star, 333000.0f, 30.0f, {1.0f, 1.0f, 0.0f});
+    Celestial mercury = Celestial("mercury", Transform{glm::vec3(-142.1f, 0.0f, 0.0f)},
+                                  Type::Planet, 0.0553f, 8.0f, {0.55f, 0.50f, 0.48f});
+    Celestial venus   = Celestial("venus", Transform{glm::vec3(-91.8f, 0.0f, 0.0f)}, Type::Planet,
+                                  0.815f, 12.0f, {1.0f, 0.5f, 0.0f});
+    Celestial earth   = Celestial("earth", Transform{glm::vec3(-50.4f, 0.0f, 0.0f)}, Type::Planet,
+                                  1.0f, 12.0f, {0.0f, 0.75f, 0.0f});
+    Celestial mars    = Celestial("mars", Transform{glm::vec3(27.9f, 0.0f, 0.0f)}, Type::Planet,
+                                  0.107f, 8.0f, {1.0f, 0.0f, 0.0f});
+    Celestial jupiter = Celestial("jupiter", Transform{glm::vec3(578.5f, 0.0f, 0.0f)}, Type::Planet,
+                                  317.8f, 200.0f, {0.76f, 0.60f, 0.42f});
+    Celestial saturn  = Celestial("saturn", Transform{glm::vec3(1226.7f, 0.0f, 0.0f)}, Type::Planet,
+                                  95.2f, 180.0f, {0.87f, 0.78f, 0.57f});
+    Celestial uran    = Celestial("uran", Transform{glm::vec3(2671.0f, 0.0f, 0.0f)}, Type::Planet,
+                                  14.5f, 100.0f, {0.56f, 0.84f, 0.86f});
+    Celestial neptun  = Celestial("neptun", Transform{glm::vec3(4298.3f, 0.0f, 0.0f)}, Type::Planet,
+                                  17.1f, 100.0f, {0.25f, 0.41f, 0.88f});
 
     auto orbital_velocity = [&](Celestial& planet) {
-        float r = glm::length(planet.transform.pos - sun.transform.pos);
+        float r           = glm::length(planet.transform.pos - sun.transform.pos);
         planet.velocity.z = sqrt(G * sun.mass / r);
-        planet.momentum = planet.velocity * planet.rest_mass;  // add this
+        planet.momentum   = planet.velocity * planet.rest_mass; // add this
     };
 
     orbital_velocity(mercury);
@@ -127,9 +137,9 @@ void System::init(Renderer* _renderer) {
 
     std::vector<unsigned int> grid_indices;
 
-    glm::ivec2 grid_size{50,50};
-    for(int i = 0; i < grid_size.x; i++) {
-        for(int j = 0; j < grid_size.y; j++) {
+    glm::ivec2 grid_size{50, 50};
+    for (int i = 0; i < grid_size.x; i++) {
+        for (int j = 0; j < grid_size.y; j++) {
             float x = -5000 + (i / (static_cast<float>(grid_size.x - 1))) * 10000;
             float z = -5000 + (j / (static_cast<float>(grid_size.y - 1))) * 10000;
 
@@ -139,15 +149,15 @@ void System::init(Renderer* _renderer) {
         }
     }
 
-    for(int i = 0; i < grid_size.x; i++) {
-        for(int j = 0; j < grid_size.y - 1; j++) {
+    for (int i = 0; i < grid_size.x; i++) {
+        for (int j = 0; j < grid_size.y - 1; j++) {
             grid_indices.push_back(i * grid_size.y + j);
             grid_indices.push_back(i * grid_size.y + j + 1);
         }
     }
 
-    for(int i = 0; i < grid_size.y; i++) {
-        for(int j = 0; j < grid_size.x - 1; j++) {
+    for (int i = 0; i < grid_size.y; i++) {
+        for (int j = 0; j < grid_size.x - 1; j++) {
             grid_indices.push_back(j * grid_size.x + i);
             grid_indices.push_back((j + 1) * grid_size.x + i);
         }
@@ -170,9 +180,9 @@ void System::simulate(float dt) {
 
     for (int i = 0; i < bodies.size(); ++i) {
         for (int j = i + 1; j < bodies.size(); ++j) {
-            bodies[i].calculate_forces(bodies[j]);    
+            bodies[i].calculate_forces(bodies[j]);
         }
-    }   
+    }
 
     for (auto& body : bodies) {
         body.update(dt);
@@ -195,10 +205,10 @@ void System::simulate(float dt) {
         float& z = grid_vertices[i + 2];
 
         float dip = 0.0f;
-        for(const auto& body : bodies) {
-            float dx = x - body.transform.pos.x;
-            float dz = z - body.transform.pos.z;
-            float horizontal_dist = sqrt(dx*dx + dz*dz) + SOFTENING;
+        for (const auto& body : bodies) {
+            float dx              = x - body.transform.pos.x;
+            float dz              = z - body.transform.pos.z;
+            float horizontal_dist = sqrt(dx * dx + dz * dz) + SOFTENING;
             dip += body.mass / horizontal_dist;
         }
 
@@ -218,8 +228,7 @@ void System::render_planets() {
     for (auto& body : bodies) {
         ImGui::PushID(body.name.c_str());
         ImGui::CollapsingHeader(body.name.c_str());
-        if(ImGui::SliderFloat("mass", &body.mass, 0, 1000000))
-        {
+        if (ImGui::SliderFloat("mass", &body.mass, 0, 1000000)) {
             body.rest_mass = body.mass;
         }
         ImGui::PopID();

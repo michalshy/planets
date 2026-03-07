@@ -25,9 +25,7 @@ void Renderer::begin_frame(Camera* camera, Window* window) {
 
     glm::mat4 view       = camera->get_view_mat();
     glm::mat4 projection = glm::mat4(1.0f);
-    projection           = glm::perspective(glm::radians(45.0f),
-                                            window->aspect_ratio(),
-                                            0.1f, 100000.0f);
+    projection = glm::perspective(glm::radians(45.0f), window->aspect_ratio(), 0.1f, 100000.0f);
     lit_shader->set_mat4("projection", projection);
     lit_shader->set_mat4("view", view);
 
@@ -49,13 +47,13 @@ void Renderer::draw_unlit(const Mesh& mesh, Transform transform, glm::vec3 color
     unlit_shader->use();
 
     glm::mat4 model = glm::mat4(1.0f);
+    unlit_shader->set_vec3("color", color);
     unlit_shader->set_mat4("model", transform.to_mat4());
 
     mesh.draw();
 }
 
 void Renderer::draw_grid(const Mesh& mesh, Transform transform, glm::vec3 color) {
-    
 }
 
 void Renderer::add_light(glm::vec3 pos) {

@@ -1,3 +1,4 @@
+#include "core/common.h"
 #include "simulation/system.h"
 #include "core/window.h"
 #include "renderer/renderer.h"
@@ -7,8 +8,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-constexpr glm::vec3 light_pos{1.2f, 12.0f, 2.0f};
 
 int main() {
 
@@ -26,11 +25,7 @@ int main() {
     System solar;
 
     Transform cube;
-    Transform light;
-    light.pos   = light_pos;
-    light.scale = {0.2f, 0.2f, 0.2f};
-
-    renderer.add_light(light_pos);
+    renderer.add_light(SUN_POSITION);
 
     solar.init(&renderer);
 
